@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Emergency monitoring is OFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnStartService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Monitoring Service" />
+
+    <Button
+        android:id="@+id/btnStopService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop Monitoring Service"
+        android:layout_marginTop="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnSimulateEmergency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIMULATE EMERGENCY" />
+
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="In real life, emergency could be detected using sensors or AI models."
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
