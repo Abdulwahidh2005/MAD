@@ -1,0 +1,55 @@
+package com.example.exp7;
+
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btnClick, btnLongClick;
+    TextView tvResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnClick = findViewById(R.id.btnClick);
+        btnLongClick = findViewById(R.id.btnLongClick);
+        tvResult = findViewById(R.id.tvResult);
+
+        // Event Listener – Click Event
+        btnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvResult.setText("Click Event Triggered");
+            }
+        });
+
+        // Event Listener – Long Click Event
+        btnLongClick.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                tvResult.setText("Long Click Event Triggered");
+                return true;
+            }
+        });
+        // Event Listener – Touch Event
+        tvResult.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Toast.makeText(MainActivity.this,
+                            "Touch Event Detected",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+    }
+}

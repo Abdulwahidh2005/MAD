@@ -1,0 +1,168 @@
+package com.example.exp6;
+
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
+public class MainActivity extends AppCompatActivity {
+
+    NotificationManager manager;
+    static final String CHANNEL_ID = "channel1";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        createChannel();
+        requestNotificationPermission();   // Android 13+
+
+        findViewById(R.id.btnSimpleNotification)
+                .setOnClickListener(v -> simpleNotification());
+
+        findViewById(R.id.btnNotificationIcon)
+                .setOnClickListener(v -> iconNotification());
+
+        findViewById(R.id.btnNotificationImage)
+                .setOnClickListener(v -> imageNotification());
+
+        findViewById(R.id.btnNotificationGroup)
+                .setOnClickListener(v -> groupNotification());
+
+        findViewById(R.id.btnNotificationSemantic)
+                .setOnClickListener(v -> semanticNotification());
+    }
+
+    // Create Notification Channel
+    private void createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel =
+                    new NotificationChannel(
+                            CHANNEL_ID,
+                            "My Notification",
+                            NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    // Request permission for Android 13+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        100);
+            }
+        }
+    }
+
+    // 1. Simple Notification
+    private void simpleNotification() {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Simple Notification")
+                        .setContentText("This is a simple notification");
+
+        manager.notify(1, builder.build());
+    }
+
+    // 2. Notification with Icon
+    private void iconNotification() {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setContentTitle("Icon Notification")
+                        .setContentText("Notification with icon");
+
+        manager.notify(2, builder.build());
+    }
+
+    // 3. Big Text Notification (Image replaced)
+    private void imageNotification() {
+
+        NotificationCompat.BigTextStyle style =
+                new NotificationCompat.BigTextStyle()
+                        .bigText("This is notification with big text style");
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Big Text Notification")
+                        .setStyle(style);
+
+        manager.notify(3, builder.build());
+    }
+
+    // 4. Group Notification
+    private void groupNotification() {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Group Notification")
+                        .setContentText("This is group notification");
+
+        manager.notify(4, builder.build());
+    }
+
+    // 5. Semantic Action Notification
+    private void semanticNotification() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("msg", "Notification Read");
+
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(
+                        R.mipmap.ic_launcher,
+                        "MARK READ",
+                        pendingIntent)
+                        .setSemanticAction(
+                                NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
+                        .build();
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Semantic Notification")
+                        .setContentText("Notification with semantic action")
+                        .addAction(action);
+
+        manager.notify(5, builder.build());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (getIntent().getExtras() != null) {
+            Toast.makeText(
+                    this,
+                    getIntent().getStringExtra("msg"),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+}

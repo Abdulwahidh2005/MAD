@@ -1,0 +1,24 @@
+package com.example.exp2;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SecondActivity extends AppCompatActivity {
+
+    TextView tvMessage;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_secondactivity);
+
+        tvMessage = findViewById(R.id.tvMessage);
+
+        // Get the intent that started this activity
+        String receivedMessage = getIntent().getStringExtra("msg");
+
+        // Set the received message on the TextView
+        tvMessage.setText(receivedMessage);
+    }
+}
